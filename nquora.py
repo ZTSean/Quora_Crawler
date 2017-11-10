@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 import re
 import requests
+import locale
 
 ####################################################################
 # Helpers
@@ -17,16 +18,38 @@ def try_cast_int(s):
         pattern = re.compile(r'([0-9]+(\.[0-9]+)*[ ]*[Kk])|([0-9]+)')
         raw_result = re.search(pattern, s).groups()
         if raw_result[2] != None:
+            print "2 is not none"
             return int(raw_result[2])
         elif raw_result[1] == None:
+            print "1 is none"
             raw_result = re.search(r'([0-9]+)', raw_result[0])
             return int(raw_result.groups()[0]) * 1000
-        else:
-            raw_result = re.search(r'([0-9]+)\.([0-9]+)', raw_result[0]).groups()
+
+        raw_result = re.search(r'([0-9]+)\.([0-9]+)', raw_result[0])
+        #####
+        print "aaa"
+        if raw_result:
+            raw_result = raw_result.groups()
+            print "hahahaha"
             return int(raw_result[0]) * 1000 + int(raw_result[1]) * 100
+        else:
+            print "not a K style"
+
+        return locale.atoi(s)
     except:
         return s
 
+def try_cast_int_comma(s):
+    '''
+    (str) -> int
+    example: ('78,769') -> 78769
+    :param s: the input string to be cast
+    :return: int
+    '''
+    try:
+        return int(s.replace(',', ''))
+    except:
+        return s
 def get_question_link(soup):
     """ (soup) -> str
     Returns the link at which the question can is present.

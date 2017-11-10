@@ -43,7 +43,7 @@ print '---------------------------------'
 print 'Start collecting user profile data...'
 
 driver = webdriver.PhantomJS()
-driver.get('http://www.quora.com/profile/Zixiao-Wang-2/followers')
+driver.get('http://www.quora.com/profile/Robert-Scoble-1/followers')
 
 ## check log in
 User.check_login(driver, username, password)

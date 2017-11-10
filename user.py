@@ -1,11 +1,10 @@
 #coding=utf-8
 
 from bs4 import BeautifulSoup
-from quora import try_cast_int
+from nquora import try_cast_int_comma
 import feedparser
 import re
 import requests
-import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -123,7 +122,17 @@ class User:
 
             for item in soup.find_all('span', attrs={'class' : 'list_count'}):
                 data_stats.append(item.string)
-            data_stats = map(try_cast_int, data_stats)
+            data_stats = map(try_cast_int_comma, data_stats)
+
+            address = None
+            total_answer_views = None
+            for item in soup.find_all('span', attrs={'class' : 'main_text'}):
+                m = re.match('Lives in (.*)', item.string)
+                if m:
+                    address = m.group(1)
+                m = re.search('(.+?) answer views', item.string)
+                if m:
+                    total_answer_views = m.group(1)
 
             user_dict = {'answers'   : data_stats[0],
                          'blogs'     : data_stats[3],
@@ -134,7 +143,9 @@ class User:
                          'posts'     : data_stats[2],
                          'questions' : data_stats[1],
                          'topics'    : data_stats[6],
-                         'username'  : user }
+                         'total_answer_view': total_answer_views,
+                         'address'   : address,
+                         'username'  : user}
             return user_dict
         except:
             return {}
