@@ -7,9 +7,9 @@ import time
 import Queue
 
 ## Settings -----------------------------------
-username = 'exmaple@gmail.com'
-password = '123456'
-total_users_to_read = 2000
+username = 'example@gmail.com'
+password = '111111'
+total_users_to_read = 10000
 current_read_users = 0
 users_to_read_queue = Queue.Queue()
 user_stats = [] ## final users stats to store
@@ -52,7 +52,7 @@ while not users_to_read_queue.empty():
     ## every time read k(total number of people in the list) people, read level by level
     for i in range(users_to_read_queue.qsize()):
         name = users_to_read_queue.get()
-        print name
+        #print name
         user = User(name)
         if user.stats:
             user_stats.append(user.stats)
@@ -63,16 +63,15 @@ while not users_to_read_queue.empty():
             followers = User.get_followers(driver, name, username, password)
             print "# of followers for " + name + ": " + str(len(followers))
             map(users_to_read_queue.put, followers)
-        '''
-            for un in followers:
-                print un
-        
-        if i > 1: ## test use
-            break
-        '''
+
         print current_read_users
         if current_read_users > total_users_to_read:
+            print "Reach threshold"
             break
+        else:
+            print "not reach threshold"
+    if current_read_users > total_users_to_read:
+        break
 
 '''
 
