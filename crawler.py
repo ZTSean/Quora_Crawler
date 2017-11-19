@@ -6,13 +6,32 @@ import codecs
 import time
 import Queue
 
+## write headers to the csv file
+def write_to_file(file, s):
+    f.write(s['username'].encode('utf-8') + ',')
+    f.write(str(s['edits']) + ',')
+    f.write(str(s['followers']) + ',')
+    f.write(s['name'].encode('utf-8') + ',')
+    f.write(str(s['questions']) + ',')
+    f.write(str(s['following']) + ',')
+    f.write(str(s['blogs']) + ',')
+    f.write(str(s['posts']) + ',')
+    f.write(str(s['topics']) + ',')
+    f.write(str(s['answers']) + ',')
+    f.write(s['total_answer_view'] + ',')
+    f.write(s['address'].encode('utf-8') + '\n')
+
 ## Settings -----------------------------------
 username = 'example@gmail.com'
-password = '111111'
-total_users_to_read = 10000
+password = 'xxx'
+total_users_to_read = 20000
+queue_limit_size = 2000
 current_read_users = 0
 users_to_read_queue = Queue.Queue()
 user_stats = [] ## final users stats to store
+output_file_name = 'quora_user_stats.csv'
+f = open(output_file_name, 'w')
+f.write('username,edits,followers,name,questions,following,blogs,posts,topics,answers,views,address\n')
 
 ## Get answer for top users in Quora in 2017
 url = 'https://www.quora.com'
@@ -52,14 +71,16 @@ while not users_to_read_queue.empty():
     ## every time read k(total number of people in the list) people, read level by level
     for i in range(users_to_read_queue.qsize()):
         name = users_to_read_queue.get()
-        #print name
+        print "# left in the queue:" + str(users_to_read_queue.qsize())
         user = User(name)
         if user.stats:
-            user_stats.append(user.stats)
+            #user_stats.append(user.stats)
+            write_to_file(f, user.stats)
             current_read_users = current_read_users + 1
 
-            ## append his/her followers to the to_read_queue
-
+            ## append his/her followers to the to_read_queue		
+            if (users_to_read_queue.qsize() > queue_limit_size):
+                continue
             followers = User.get_followers(driver, name, username, password)
             print "# of followers for " + name + ": " + str(len(followers))
             map(users_to_read_queue.put, followers)
@@ -94,22 +115,10 @@ print '---------------------------------'
 print 'Start writing collected data into local file...'
 
 
-output_file_name = 'quora_user_stats.csv'
-f = open(output_file_name, 'w')
 
-## write headers to the csv file
-f.write('username,edits,followers,name,questions,following,blogs,posts,topics,answers\n')
-for s in user_stats:
-    f.write(s['username'] + ',')
-    f.write(str(s['edits']) + ',')
-    f.write(str(s['followers']) + ',')
-    f.write(s['name'] + ',')
-    f.write(str(s['questions']) + ',')
-    f.write(str(s['following']) + ',')
-    f.write(str(s['blogs']) + ',')
-    f.write(str(s['posts']) + ',')
-    f.write(str(s['topics']) + ',')
-    f.write(str(s['answers']) + '\n')
+
+
+
 f.close()
 print 'Done with local file writing...'
 

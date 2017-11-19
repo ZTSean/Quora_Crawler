@@ -94,7 +94,6 @@ class Quora:
             else: # question like znrZ3
                 soup = BeautifulSoup(requests.get('http://qr.ae/' + question).text)
         else:
-            print "aaa"
             soup = BeautifulSoup(requests.get('http://www.quora.com/' + question + '/answer/' + author).text)
         return Quora.scrape_one_answer(soup)
 
@@ -104,7 +103,6 @@ class Quora:
         Scrapes the soup object to get details of an answer.
         """
         try:
-            print 'bbb'
             answer = soup.find('div', id=re.compile('_answer_content$')).find('span', class_='rendered_qtext')
             print answer
             
@@ -200,22 +198,18 @@ class Quora:
         """
         try:
             raw_topics = soup.find_all('span', attrs={'TopicNameSpan'})
-            print ("1")
             topics = []
             for topic in raw_topics:
                 topics.append(topic.string)
 
             #want_answers = soup.find('span', attrs={'class' : 'count'}).string
-            print ("2")
             answer_count = soup.find('div', attrs={'class' : 'answer_count'}).next.split()[0]
             print ("answer_count:" + answer_count)
             question_text = list(soup.find('div', attrs = {'class' : 'question_text_edit'}).find('h1').children)[-1]
             #question_details = soup.find('div', attrs = {'class' : 'question_details_text'}) no longer exist
-            print ("3")
             answer_wiki = soup.find('div', attrs = {'class' : 'AnswerWikiArea'}).find('div')
             print type(answer_count)
             print try_cast_int(answer_count)
-            print ("5")
             question_dict = { #'want_answers' : try_cast_int(want_answers), // not find in current UI design
                              'answer_count' : try_cast_int(answer_count),
                              'question_text' : question_text.string,
@@ -224,7 +218,6 @@ class Quora:
                              'answer_wiki' : str(answer_wiki),
                             }
 
-            print ("6")
             return question_dict
         except:
             return {}

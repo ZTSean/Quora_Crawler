@@ -124,8 +124,8 @@ class User:
                 data_stats.append(item.string)
             data_stats = map(try_cast_int_comma, data_stats)
 
-            address = None
-            total_answer_views = None
+            address = ""
+            total_answer_views = ""
             for item in soup.find_all('span', attrs={'class' : 'main_text'}):
                 m = re.match('Lives in (.*)', item.string)
                 if m:
