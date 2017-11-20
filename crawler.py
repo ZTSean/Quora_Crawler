@@ -8,17 +8,17 @@ import Queue
 
 ## write headers to the csv file
 def write_to_file(file, s):
-    f.write(s['username'].encode('utf-8') + ',')
-    f.write(str(s['edits']) + ',')
-    f.write(str(s['followers']) + ',')
-    f.write(s['name'].encode('utf-8') + ',')
-    f.write(str(s['questions']) + ',')
-    f.write(str(s['following']) + ',')
-    f.write(str(s['blogs']) + ',')
-    f.write(str(s['posts']) + ',')
-    f.write(str(s['topics']) + ',')
-    f.write(str(s['answers']) + ',')
-    f.write(s['total_answer_view'] + ',')
+    f.write(s['username'].encode('utf-8') + '|')
+    f.write(str(s['edits']) + '|')
+    f.write(str(s['followers']) + '|')
+    f.write(s['name'].encode('utf-8') + '|')
+    f.write(str(s['questions']) + '|')
+    f.write(str(s['following']) + '|')
+    f.write(str(s['blogs']) + '|')
+    f.write(str(s['posts']) + '|')
+    f.write(str(s['topics']) + '|')
+    f.write(str(s['answers']) + '|')
+    f.write(s['total_answer_view'] + '|')
     f.write(s['address'].encode('utf-8') + '\n')
 
 ## Settings -----------------------------------
